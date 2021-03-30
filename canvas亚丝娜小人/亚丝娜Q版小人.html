@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      canvas {
+        border: solid;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas" width="800" height="500"></canvas>
+    <script>
+      /** @type {HTMLCanvasElement} */
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+
+      //   小女孩
+      class Girl {
+        constructor(x, y) {
+          this.x = x;
+          this.y = y;
+          // 走在哪种步子上，合法值0、1、2、3
+          this.state = 0;
+          this.direct = 0;
+          //   行走步长
+          this.speed = 3 * 1.5;
+        }
+        // 亚丝娜Q版-原型初始化
+        render() {
+          ctx.drawImage(
+            image,
+            32 * this.state,
+            48.25 * this.direct,
+            32,
+            48.25,
+            this.x,
+            this.y,
+            32 * 1.5,
+            48.25 * 1.5
+          );
+        }
+        update(direct) {
+          this.direct = direct;
+          //   根据按下的方向键移动
+          switch (this.direct) {
+            case 0:
+              this.y += this.speed;
+              break;
+            case 1:
+              this.x -= this.speed;
+              break;
+            case 2:
+              this.x += this.speed;
+              break;
+            case 3:
+              this.y -= this.speed;
+              break;
+            default:
+              break;
+          }
+          this.state++;
+          if (this.state > 3) {
+            this.state = 0;
+          }
+        }
+      }
+
+      const image = new Image();
+      image.src = "images/asina.png";
+      //   等图片加载完成后再new
+      image.onload = function () {
+        const girl = new Girl(100, 100);
+        girl.render();
+        //   监听
+        window.addEventListener("keydown", function (e) {
+          let direct = 0;
+          switch (e.keyCode) {
+            case 87: //w||上箭头
+              direction(3);
+              break;
+            case 38: //w||上箭头
+              direction(3);
+              break;
+            case 83: //s||下箭头
+              direction(0);
+              break;
+            case 40: //s||下箭头
+              direction(0);
+              break;
+            case 65: //a||左箭头
+              direction(1);
+              break;
+            case 37: //a||左箭头
+              direction(1);
+              break;
+            case 68: //d||右箭头
+              direction(2);
+              break;
+            case 39: //d||右箭头
+              direction(2);
+              break;
+            default:
+              break;
+          }
+        });
+        function direction(directIndex) {
+          direct = directIndex;
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          girl.update(direct);
+          girl.render();
+        }
+        // setInterval(function () {}, 60);
+      };
+    </script>
+  </body>
+</html>
